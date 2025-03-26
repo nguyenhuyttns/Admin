@@ -1,6 +1,6 @@
-// views/admin_drawer.dart
-import 'package:flutter/material.dart';
+// widgets/admin_drawer.dart (update)
 
+import 'package:flutter/material.dart';
 import '../utils/auth_utils.dart';
 
 class AdminDrawer extends StatelessWidget {
@@ -20,10 +20,24 @@ class AdminDrawer extends StatelessWidget {
             ),
           ),
           ListTile(
+            leading: const Icon(Icons.dashboard),
+            title: const Text('Dashboard'),
+            onTap: () {
+              Navigator.pushReplacementNamed(context, '/admin');
+            },
+          ),
+          ListTile(
             leading: const Icon(Icons.people),
             title: const Text('User Management'),
             onTap: () {
               Navigator.pushNamed(context, '/users');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.category),
+            title: const Text('Category Management'),
+            onTap: () {
+              Navigator.pushNamed(context, '/categories');
             },
           ),
           ListTile(
