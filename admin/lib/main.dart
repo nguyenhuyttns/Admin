@@ -1,4 +1,5 @@
-// main.dart
+// main.dart (update)
+
 import 'package:admin/view_models/user_view_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -6,6 +7,7 @@ import 'views/login_view.dart';
 import 'view_models/login_view_model.dart';
 import 'views/admin_dashboard.dart';
 import 'views/user_management_view.dart';
+import 'views/add_user_view.dart';
 
 void main() {
   runApp(
@@ -25,6 +27,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Admin Panel',
       theme: ThemeData(primarySwatch: Colors.blue),
       initialRoute: '/',
@@ -32,7 +35,9 @@ class MyApp extends StatelessWidget {
         '/': (context) => const LoginView(),
         '/admin': (context) => const AdminDashboard(),
         '/users': (context) => const UserManagementView(),
+        '/add-user': (context) => const AddUserView(),
       },
+      // We can't add EditUserView to routes because it requires a user parameter
     );
   }
 }
