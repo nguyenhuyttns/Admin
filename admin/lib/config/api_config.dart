@@ -1,7 +1,7 @@
 // lib/config/api_config.dart
 class ApiConfig {
   // Update this to your actual API URL (including the /api/v1 part)
-  static const String serverIP = '192.168.1.216';
+  static const String serverIP = 'localhost';
   static const String baseUrl = 'http://$serverIP:3000/api/v1';
 
   static const String productsEndpoint = '/products';

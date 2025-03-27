@@ -1,5 +1,6 @@
 // main.dart (update)
 
+import 'package:admin/view_models/product_view_model.dart';
 import 'package:admin/view_models/category_view_model.dart';
 import 'package:admin/view_models/user_view_model.dart';
 import 'package:flutter/material.dart';
@@ -10,6 +11,7 @@ import 'views/admin_dashboard.dart';
 import 'views/user_management_view.dart';
 import 'views/add_user_view.dart';
 import 'views/category_management_view.dart';
+import 'views/product_management_view.dart';
 
 void main() {
   runApp(
@@ -18,6 +20,7 @@ void main() {
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => CategoryViewModel()),
+        ChangeNotifierProvider(create: (_) => ProductViewModel()),
       ],
       child: const MyApp(),
     ),
@@ -40,6 +43,7 @@ class MyApp extends StatelessWidget {
         '/users': (context) => const UserManagementView(),
         '/add-user': (context) => const AddUserView(),
         '/categories': (context) => const CategoryManagementView(),
+        '/products': (context) => const ProductManagementView(),
       },
     );
   }

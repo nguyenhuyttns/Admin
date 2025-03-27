@@ -1,4 +1,4 @@
-// widgets/admin_drawer.dart
+// widgets/admin_drawer.dart (update)
 
 import 'package:flutter/material.dart';
 import '../utils/auth_utils.dart';
@@ -96,7 +96,7 @@ class AdminDrawer extends StatelessWidget {
                     ),
                     _buildMenuItem(
                       context: context,
-                      icon: Icons.shopping_bag_rounded,
+                      icon: Icons.inventory_2_rounded,
                       title: 'Product Management',
                       route: '/products',
                     ),

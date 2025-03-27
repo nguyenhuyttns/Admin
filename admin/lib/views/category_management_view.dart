@@ -541,7 +541,7 @@ class _CategoryManagementViewState extends State<CategoryManagementView> {
             ),
           ),
 
-          // Categories grid/list
+          // Categories list
           Expanded(
             child:
                 viewModel.isLoading
@@ -552,14 +552,7 @@ class _CategoryManagementViewState extends State<CategoryManagementView> {
                     ? _buildNoResultsState()
                     : Padding(
                       padding: const EdgeInsets.all(16.0),
-                      child: GridView.builder(
-                        gridDelegate:
-                            const SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              childAspectRatio: 1.2,
-                              crossAxisSpacing: 12,
-                              mainAxisSpacing: 12,
-                            ),
+                      child: ListView.builder(
                         itemCount: filteredCategories.length,
                         itemBuilder: (context, index) {
                           return _buildCategoryCard(
@@ -575,152 +568,172 @@ class _CategoryManagementViewState extends State<CategoryManagementView> {
     );
   }
 
+  // Redesigned long card for category
   Widget _buildCategoryCard(BuildContext context, Category category) {
+    Color categoryColor = Color(
+      int.parse(category.color.replaceAll('#', '0xFF')),
+    );
+
     return Card(
       elevation: 3,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(
-          color: Color(
-            int.parse(category.color.replaceAll('#', '0xFF')),
-          ).withOpacity(0.3),
-          width: 1,
+      margin: const EdgeInsets.only(bottom: 12),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: categoryColor.withOpacity(0.5), width: 1),
         ),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Category header with color
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
-            decoration: BoxDecoration(
-              color: Color(
-                int.parse(category.color.replaceAll('#', '0xFF')),
-              ).withOpacity(0.2),
-              borderRadius: const BorderRadius.only(
-                topLeft: Radius.circular(12),
-                topRight: Radius.circular(12),
+        child: IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              // Left color bar
+              Container(
+                width: 12,
+                decoration: BoxDecoration(
+                  color: categoryColor,
+                  borderRadius: const BorderRadius.only(
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(12),
+                  ),
+                ),
               ),
-            ),
-            child: Row(
-              children: [
-                Container(
-                  width: 16,
-                  height: 16,
-                  decoration: BoxDecoration(
-                    color: Color(
-                      int.parse(category.color.replaceAll('#', '0xFF')),
-                    ),
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: Text(
-                    category.name,
-                    style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                      color: Color(
-                        int.parse(category.color.replaceAll('#', '0xFF')),
-                      ),
-                    ),
-                    overflow: TextOverflow.ellipsis,
-                  ),
-                ),
-              ],
-            ),
-          ),
 
-          // Category details
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                // Color code
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.palette_outlined,
-                      size: 14,
-                      color: Colors.grey,
-                    ),
-                    const SizedBox(width: 4),
-                    Text(
-                      category.color,
-                      style: TextStyle(fontSize: 12, color: Colors.grey[700]),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 4),
-
-                // Icon info if available
-                if (category.icon.isNotEmpty)
-                  Row(
+              // Category info
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Row(
                     children: [
-                      const Icon(
-                        Icons.image_outlined,
-                        size: 14,
-                        color: Colors.grey,
-                      ),
-                      const SizedBox(width: 4),
-                      Expanded(
-                        child: Text(
-                          category.icon,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[700],
+                      // Category color circle
+                      Container(
+                        width: 40,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: categoryColor.withOpacity(0.2),
+                          shape: BoxShape.circle,
+                          border: Border.all(color: categoryColor, width: 2),
+                        ),
+                        child: Center(
+                          child: Icon(
+                            Icons.category,
+                            color: categoryColor,
+                            size: 20,
                           ),
-                          overflow: TextOverflow.ellipsis,
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+
+                      // Category details
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            // Category name
+                            Text(
+                              category.name,
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                                color: Colors.grey[800],
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+
+                            // Category color
+                            Row(
+                              children: [
+                                Icon(
+                                  Icons.palette_outlined,
+                                  size: 14,
+                                  color: Colors.grey[600],
+                                ),
+                                const SizedBox(width: 4),
+                                Text(
+                                  category.color,
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[600],
+                                  ),
+                                ),
+                              ],
+                            ),
+
+                            // Icon URL if available
+                            if (category.icon.isNotEmpty) ...[
+                              const SizedBox(height: 4),
+                              Row(
+                                children: [
+                                  Icon(
+                                    Icons.image_outlined,
+                                    size: 14,
+                                    color: Colors.grey[600],
+                                  ),
+                                  const SizedBox(width: 4),
+                                  Expanded(
+                                    child: Text(
+                                      category.icon,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        color: Colors.grey[600],
+                                      ),
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ],
                         ),
                       ),
                     ],
                   ),
-              ],
-            ),
-          ),
+                ),
+              ),
 
-          // Action buttons
-          const Spacer(),
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                // Edit button
-                IconButton(
-                  icon: const Icon(Icons.edit, color: Colors.blue, size: 20),
-                  onPressed: () {
-                    _showCategoryDialog(context, category: category);
-                  },
-                  tooltip: 'Edit Category',
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.blue.withOpacity(0.1),
+              // Action buttons
+              Container(
+                decoration: BoxDecoration(
+                  color: Colors.grey[50],
+                  borderRadius: const BorderRadius.only(
+                    topRight: Radius.circular(12),
+                    bottomRight: Radius.circular(12),
                   ),
                 ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // Edit button
+                    IconButton(
+                      icon: const Icon(Icons.edit, color: Colors.blue),
+                      onPressed: () {
+                        _showCategoryDialog(context, category: category);
+                      },
+                      tooltip: 'Edit Category',
+                    ),
 
-                // Delete button
-                IconButton(
-                  icon: const Icon(Icons.delete, color: Colors.red, size: 20),
-                  onPressed: () {
-                    _showDeleteConfirmation(
-                      context,
-                      category.id,
-                      category.name,
-                    );
-                  },
-                  tooltip: 'Delete Category',
-                  style: IconButton.styleFrom(
-                    backgroundColor: Colors.red.withOpacity(0.1),
-                  ),
+                    // Divider
+                    Container(height: 1, width: 24, color: Colors.grey[300]),
+
+                    // Delete button
+                    IconButton(
+                      icon: const Icon(Icons.delete, color: Colors.red),
+                      onPressed: () {
+                        _showDeleteConfirmation(
+                          context,
+                          category.id,
+                          category.name,
+                        );
+                      },
+                      tooltip: 'Delete Category',
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-        ],
+        ),
       ),
     );
   }
