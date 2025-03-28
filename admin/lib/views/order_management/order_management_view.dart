@@ -2,11 +2,11 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view_models/order_view_model.dart';
-import '../utils/auth_guard.dart';
-import 'order_management/widgets/order_card.dart';
-import 'order_management/widgets/order_filters.dart';
-import 'order_management/utils/order_utils.dart';
+import '../../view_models/order_view_model.dart';
+import '../../utils/auth_guard.dart';
+import 'widgets/order_card.dart';
+import 'widgets/order_filters.dart';
+import 'utils/order_utils.dart';
 
 class OrderManagementView extends StatefulWidget {
   const OrderManagementView({super.key});

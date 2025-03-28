@@ -1,35 +1,54 @@
-// views/add_user_view.dart
+// views/edit_user_view.dart
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view_models/user_view_model.dart';
+import '../../view_models/user_view_model.dart';
+import '../../models/user.dart';
 
-class AddUserView extends StatefulWidget {
-  const AddUserView({super.key});
+class EditUserView extends StatefulWidget {
+  final User user;
+
+  const EditUserView({super.key, required this.user});
 
   @override
-  _AddUserViewState createState() => _AddUserViewState();
+  _EditUserViewState createState() => _EditUserViewState();
 }
 
-class _AddUserViewState extends State<AddUserView> {
+class _EditUserViewState extends State<EditUserView> {
   final _formKey = GlobalKey<FormState>();
 
-  // Controllers for form fields
-  final _nameController = TextEditingController();
-  final _emailController = TextEditingController();
-  final _passwordController = TextEditingController();
-  final _phoneController = TextEditingController();
-  final _streetController = TextEditingController();
-  final _apartmentController = TextEditingController();
-  final _zipController = TextEditingController();
-  final _cityController = TextEditingController();
-  final _countryController = TextEditingController();
+  late TextEditingController _nameController;
+  late TextEditingController _emailController;
+  late TextEditingController _passwordController;
+  late TextEditingController _phoneController;
+  late TextEditingController _streetController;
+  late TextEditingController _apartmentController;
+  late TextEditingController _zipController;
+  late TextEditingController _cityController;
+  late TextEditingController _countryController;
 
-  bool _isAdmin = false;
+  late bool _isAdmin;
+  bool _changePassword = false;
+
+  @override
+  void initState() {
+    super.initState();
+    // Initialize controllers with existing user data
+    _nameController = TextEditingController(text: widget.user.name);
+    _emailController = TextEditingController(text: widget.user.email);
+    _passwordController = TextEditingController();
+    _phoneController = TextEditingController(text: widget.user.phone);
+    _streetController = TextEditingController(text: widget.user.street);
+    _apartmentController = TextEditingController(text: widget.user.apartment);
+    _zipController = TextEditingController(text: widget.user.zip);
+    _cityController = TextEditingController(text: widget.user.city);
+    _countryController = TextEditingController(text: widget.user.country);
+
+    _isAdmin = widget.user.isAdmin;
+  }
 
   @override
   void dispose() {
-    // Clean up controllers when the widget is disposed
     _nameController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -47,7 +66,7 @@ class _AddUserViewState extends State<AddUserView> {
     final viewModel = Provider.of<UserViewModel>(context);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Add New User')),
+      appBar: AppBar(title: const Text('Edit User')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -56,6 +75,20 @@ class _AddUserViewState extends State<AddUserView> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
+                // User ID display
+                Container(
+                  padding: const EdgeInsets.all(8.0),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(4.0),
+                  ),
+                  child: Text(
+                    'User ID: ${widget.user.id}',
+                    style: const TextStyle(fontFamily: 'Courier', fontSize: 12),
+                  ),
+                ),
+                const SizedBox(height: 16),
+
                 // Required Fields Section
                 const Text(
                   'Required Information',
@@ -88,7 +121,6 @@ class _AddUserViewState extends State<AddUserView> {
                     if (value == null || value.isEmpty) {
                       return 'Please enter an email';
                     }
-                    // Basic email validation
                     if (!value.contains('@') || !value.contains('.')) {
                       return 'Please enter a valid email';
                     }
@@ -97,24 +129,44 @@ class _AddUserViewState extends State<AddUserView> {
                 ),
                 const SizedBox(height: 16),
 
-                TextFormField(
-                  controller: _passwordController,
-                  decoration: const InputDecoration(
-                    labelText: 'Password',
-                    border: OutlineInputBorder(),
-                  ),
-                  obscureText: true,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter a password';
-                    }
-                    if (value.length < 6) {
-                      return 'Password must be at least 6 characters';
-                    }
-                    return null;
-                  },
+                // Password Change Option
+                Row(
+                  children: [
+                    Checkbox(
+                      value: _changePassword,
+                      onChanged: (value) {
+                        setState(() {
+                          _changePassword = value ?? false;
+                        });
+                      },
+                    ),
+                    const Text('Change Password'),
+                  ],
                 ),
-                const SizedBox(height: 16),
+
+                if (_changePassword)
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 16.0),
+                    child: TextFormField(
+                      controller: _passwordController,
+                      decoration: const InputDecoration(
+                        labelText: 'New Password',
+                        border: OutlineInputBorder(),
+                      ),
+                      obscureText: true,
+                      validator: (value) {
+                        if (_changePassword) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please enter a password';
+                          }
+                          if (value.length < 6) {
+                            return 'Password must be at least 6 characters';
+                          }
+                        }
+                        return null;
+                      },
+                    ),
+                  ),
 
                 TextFormField(
                   controller: _phoneController,
@@ -211,7 +263,6 @@ class _AddUserViewState extends State<AddUserView> {
                               final userData = {
                                 'name': _nameController.text,
                                 'email': _emailController.text,
-                                'password': _passwordController.text,
                                 'phone': _phoneController.text,
                                 'isAdmin': _isAdmin,
                                 'street': _streetController.text,
@@ -221,7 +272,14 @@ class _AddUserViewState extends State<AddUserView> {
                                 'country': _countryController.text,
                               };
 
-                              final success = await viewModel.createUser(
+                              // Only include password if changing it
+                              if (_changePassword &&
+                                  _passwordController.text.isNotEmpty) {
+                                userData['password'] = _passwordController.text;
+                              }
+
+                              final success = await viewModel.updateUser(
+                                widget.user.id,
                                 userData,
                               );
 
@@ -229,7 +287,7 @@ class _AddUserViewState extends State<AddUserView> {
                                 Navigator.pop(context);
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
-                                    content: Text('User created successfully'),
+                                    content: Text('User updated successfully'),
                                     backgroundColor: Colors.green,
                                   ),
                                 );
@@ -237,7 +295,7 @@ class _AddUserViewState extends State<AddUserView> {
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
                                     content: Text(
-                                      'Failed to create user: ${viewModel.errorMessage}',
+                                      'Failed to update user: ${viewModel.errorMessage}',
                                     ),
                                     backgroundColor: Colors.red,
                                   ),
@@ -252,7 +310,7 @@ class _AddUserViewState extends State<AddUserView> {
                       viewModel.isLoading
                           ? const CircularProgressIndicator(color: Colors.white)
                           : const Text(
-                            'Create User',
+                            'Update User',
                             style: TextStyle(fontSize: 16),
                           ),
                 ),

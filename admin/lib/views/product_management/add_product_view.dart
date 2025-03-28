@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:image_picker/image_picker.dart';
-import '../view_models/product_view_model.dart';
-import '../models/category.dart';
+import '../../view_models/product_view_model.dart';
+import '../../models/category.dart';
 
 class AddProductView extends StatefulWidget {
   const AddProductView({super.key});

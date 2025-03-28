@@ -27,11 +27,10 @@ class OrderViewModel with ChangeNotifier {
     try {
       await _orderService.init();
       _orders = await _orderService.getOrders();
-      print("Loaded ${_orders.length} orders"); // Thêm log để debug
+
       _isLoading = false;
       notifyListeners();
     } catch (e) {
-      print("Error loading orders: ${e.toString()}"); // Thêm log để debug
       _isLoading = false;
       _errorMessage = e.toString();
       notifyListeners();
@@ -52,7 +51,6 @@ class OrderViewModel with ChangeNotifier {
       notifyListeners();
       return _selectedOrder;
     } catch (e) {
-      print("Error loading order details: ${e.toString()}");
       _isLoadingDetails = false;
       _errorMessage = e.toString();
       notifyListeners();

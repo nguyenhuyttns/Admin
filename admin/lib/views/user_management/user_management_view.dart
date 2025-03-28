@@ -2,9 +2,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view_models/user_view_model.dart';
-import '../utils/auth_guard.dart';
-import '../models/user.dart';
+import '../../view_models/user_view_model.dart';
+import '../../utils/auth_guard.dart';
+import '../../models/user.dart';
 import 'add_user_view.dart';
 import 'edit_user_view.dart';
 

@@ -7,7 +7,6 @@ import '../services/product_service.dart';
 import '../services/category_service.dart';
 import '../models/product.dart';
 import '../models/category.dart';
-import '../config/api_config.dart';
 
 class ProductViewModel with ChangeNotifier {
   final ProductService _productService = ProductService();

@@ -9,10 +9,10 @@ import 'view_models/product_view_model.dart';
 import 'view_models/category_view_model.dart';
 import 'view_models/user_view_model.dart';
 import 'views/admin_dashboard.dart';
-import 'views/user_management_view.dart';
+import 'views/user_management/user_management_view.dart';
 import 'views/category_management_view.dart';
-import 'views/product_management_view.dart';
-import 'views/order_management_view.dart';
+import 'views/product_management/product_management_view.dart';
+import 'views/order_management/order_management_view.dart';
 
 void main() {
   runApp(

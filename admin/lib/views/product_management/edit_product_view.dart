@@ -1,12 +1,10 @@
 // views/edit_product_view.dart
 
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import '../view_models/product_view_model.dart';
-import '../models/product.dart';
-import '../models/category.dart';
-import '../config/api_config.dart';
+import '../../view_models/product_view_model.dart';
+import '../../models/product.dart';
+import '../../models/category.dart';
 
 class EditProductView extends StatefulWidget {
   final Product product;
